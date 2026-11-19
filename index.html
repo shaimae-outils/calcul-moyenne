@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<!-- saved from url=(0049)file:///C:/Users/hp/Downloads/calcul-moyenne.html -->
+<html lang="fr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calcul de moyenne universitaire (Maroc)</title>
+<meta name="description" content="Calculez votre moyenne avec coefficients et votre mention. Outil gratuit pour étudiants.">
+<style>
+  :root { --bg:#f7f7f5; --card:#fff; --text:#1d1d1b; --muted:#666; --accent:#0a7d5a; --border:#ddd; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#161614; --card:#222220; --text:#eee; --muted:#aaa; --accent:#3fc59a; --border:#444; }
+  }
+  body { font-family: Arial, sans-serif; background:var(--bg); color:var(--text); margin:0; padding:16px; }
+  .box { max-width:560px; margin:0 auto; background:var(--card); border:1px solid var(--border); border-radius:12px; padding:20px; }
+  h1 { font-size:22px; margin-top:0; }
+  .row { display:flex; gap:8px; margin-bottom:8px; }
+  input { flex:1; min-width:0; padding:8px; border:1px solid var(--border); border-radius:6px; background:var(--bg); color:var(--text); }
+  input.small { flex:0 0 80px; }
+  button { padding:10px 14px; border:0; border-radius:6px; cursor:pointer; background:var(--accent); color:#fff; font-size:15px; }
+  button.sec { background:transparent; color:var(--accent); border:1px solid var(--accent); }
+  .actions { display:flex; gap:8px; margin-top:12px; flex-wrap:wrap; }
+  #res { margin-top:16px; font-size:18px; font-weight:bold; }
+  .muted { color:var(--muted); font-size:13px; }
+</style>
+</head>
+<body>
+<div class="box">
+  <h1>Calcul de moyenne</h1>
+  <p class="muted">Ajoutez vos modules, vos notes (sur 20) et les coefficients.</p>
+
+  <div id="rows"><div class="row"><input placeholder="Module"><input class="small note" type="number" min="0" max="20" step="0.01" placeholder="Note"><input class="small coef" type="number" min="0" step="0.5" placeholder="Coef" value="1"></div><div class="row"><input placeholder="Module"><input class="small note" type="number" min="0" max="20" step="0.01" placeholder="Note"><input class="small coef" type="number" min="0" step="0.5" placeholder="Coef" value="1"></div><div class="row"><input placeholder="Module"><input class="small note" type="number" min="0" max="20" step="0.01" placeholder="Note"><input class="small coef" type="number" min="0" step="0.5" placeholder="Coef" value="1"></div></div>
+
+  <div class="actions">
+    <button class="sec" onclick="addRow()">+ Ajouter un module</button>
+    <button onclick="calculer()">Calculer</button>
+  </div>
+
+  <div id="res"></div>
+  <p class="muted" id="mention"></p>
+</div>
+
+<script>
+  function addRow() {
+    const div = document.createElement("div");
+    div.className = "row";
+    div.innerHTML =
+      '<input placeholder="Module">' +
+      '<input class="small note" type="number" min="0" max="20" step="0.01" placeholder="Note">' +
+      '<input class="small coef" type="number" min="0" step="0.5" placeholder="Coef" value="1">';
+    document.getElementById("rows").appendChild(div);
+  }
+
+  function calculer() {
+    const notes = document.querySelectorAll(".note");
+    const coefs = document.querySelectorAll(".coef");
+    let somme = 0, total = 0;
+
+    for (let i = 0; i < notes.length; i++) {
+      const n = parseFloat(notes[i].value);
+      const c = parseFloat(coefs[i].value);
+      if (!isNaN(n) && !isNaN(c)) { somme += n * c; total += c; }
+    }
+
+    const res = document.getElementById("res");
+    const mention = document.getElementById("mention");
+    if (total === 0) { res.textContent = "Entrez au moins une note."; mention.textContent = ""; return; }
+
+    const moy = somme / total;
+    res.textContent = "Moyenne : " + moy.toFixed(2) + " / 20";
+
+    let m = "Ajourné";
+    if (moy >= 16) m = "Très bien";
+    else if (moy >= 14) m = "Bien";
+    else if (moy >= 12) m = "Assez bien";
+    else if (moy >= 10) m = "Passable";
+    mention.textContent = "Mention : " + m;
+  }
+
+  addRow(); addRow(); addRow();
+</script>
+
+
+</body></html>
